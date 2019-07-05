@@ -1,0 +1,104 @@
+<view class='top'>
+    <view class="top_item" bindtap="addcaht">
+        <image src="https://www.fawuding.cn/fwd/public/assets/newimg/chat_we.png"></image>
+        <text style="display:block">加微信</text>
+    </view>
+    <view class="top_item" bindtap="callPhone">
+        <image src="https://www.fawuding.cn/fwd/public/assets/newimg/chat_phone.png"></image>
+        <text style="display:block">打电话</text>
+    </view>
+    <view class="top_item">
+        <image src="https://www.fawuding.cn/fwd/public/assets/newimg/chat_callme.png"></image>
+        <text style="display:block">联系我</text>
+    </view>
+    <button class="getPhone" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">
+        获取手机号
+    </button>
+</view>
+<!-- 占位盒子 -->
+<view class="topBox"></view>
+<!-- 聊天区域 -->
+<scroll-view scroll-into-view="{{toView}}" bindtouchstart="hide"  bindlongpress="hide" enableBackToTop="true" scroll-y="true" style="width:100%;height:{{chatHeight}};transition: all .3s ">
+    <!-- 时间 -->
+    <view class="mess_time" style="margin-top:50rpx">18:00</view>
+    <block wx:for="{{messArr}}" wx:key="index">
+        <!-- 消息  客服 -->
+        <view style="margin-top:-20rpx" wx:if="{{messArr[index].is_kefu}}">
+            <view class="sanjiao" wx:if="{{messArr[index].type=='txt'}}"></view>
+            <view class="mess_item {{messArr[index].type=='txt' ? '':'kefu_notxt'}}">
+                <!-- 头像 -->
+                <image class="head {{messArr[index].type=='txt' ? '':'kefu_ntxt_mess'}}" src="/image/1h.jpg"></image>
+                <!-- 文字 -->
+                <text wx:if="{{messArr[index].type=='txt'}}" class="mess" decode="true">
+                    {{messArr[index].mess}} &nbsp;&nbsp;
+                </text>
+                <!-- 图片 -->
+                <image bindtap="previewImage" wx:elif="{{messArr[index].type=='img'}}" class="userImg" src="{{messArr[index].url}}" mode="widthFix"></image>
+                <!-- 文件 -->
+                <view data-src="{{messArr[index].url}}" bindtap="gotoLook" wx:else class="user_file">
+                    <view class="file_title">{{messArr[index].name}}</view>
+                    <image class="user_file_image" src="https://www.fawuding.cn/fwd/public/assets/newimg/chat_file.png"></image>
+                    <view class="file_size">
+                        {{messArr[index].size}}KB
+                        <text>{{messArr[index].time}}</text>
+                    </view>
+                </view>
+                <text wx:if="{{index+1 == messArr.length}}" class="mess_item" id="is_bottom"></text>
+            </view>
+        </view>
+        <!-- 消息 用户 -->
+        <view wx:else>
+            <view class="mess_item user_item">
+                <!-- 文字 -->
+                <text wx:if="{{messArr[index].type=='txt'}}" class="mess user_mess" decode="true">{{messArr[index].mess}}&nbsp;&nbsp;
+                </text>
+                <!-- 图片 -->
+                <image bindtap="previewImage" wx:elif="{{messArr[index].type=='img'}}" class="userImg" data-src="{{messArr[index].url}}" src="{{messArr[index].url}}" mode="widthFix"></image>
+                <!-- 文件 -->
+                <view data-src="{{messArr[index].url}}" bindtap="gotoLook" wx:else class="user_file">
+                    <view class="file_title">{{messArr[index].name}}</view>
+                    <image class="user_file_image" src="https://www.fawuding.cn/fwd/public/assets/newimg/chat_file.png"></image>
+                    <view class="file_size">
+                        {{messArr[index].size}}
+                        <text>{{messArr[index].time}}</text>
+                    </view>
+                </view>
+                <!-- 三角形 -->
+                <view class="user_sanjiao" wx:if="{{messArr[index].type=='txt'}}"></view>
+                <!-- 头像 -->
+                <!-- <image class="head" src="{{userInfo.avatarUrl}}"></image> -->
+                <image class="head" src="/image/2h.jpg"></image>
+                <text wx:if="{{index+1 == messArr.length}}" class="mess_item" id="is_bottom"></text>
+            </view>
+        </view>
+    </block>
+</scroll-view>
+<view class='bottom' style="bottom:{{bottom}};">
+    <input class="userinput" bindfocus="riseBottom" adjust-position="{{false}}" placeholder=" 请输入消息" bindinput="inputVal" value='{{val}}' confirm-type="send" bindconfirm="sendVal" confirm-hold="true"></input>
+    <image bindtap="open_em" class="chat_em" src="{{open_em_url}}"></image>
+    <image bindtap="open_file" class="chat_open" src="{{open_file_url}}"></image>
+</view>
+<view class="fileBox" style="height:{{height}}">
+    <view class="file_time">
+        <image bindtap="img_xiangce" src="https://www.fawuding.cn/fwd/public/assets/newimg/chat_img.png"></image>
+        <text>相册</text>
+    </view>
+    <view class="file_time">
+        <image bindtap="img_paishe" src="https://www.fawuding.cn/fwd/public/assets/newimg/chat_camera.png"></image>
+        <text>拍摄</text>
+    </view>
+    <view class="file_time">
+        <image bindtap="get_file" src="https://www.fawuding.cn/fwd/public/assets/newimg/chat_file.png"></image>
+        <text>文件</text>
+    </view>
+</view>
+<view class="fileBox" style="height:{{emHeight}}">
+    <text decode="true" style="display:block;height:20rpx">&nbsp;</text>
+    <view class="emlist" wx:for="{{em}}" wx:key="index" bindtap='addem' id="{{index}}">
+        {{item}}
+    </view>
+    <text class="send" bindtap="sendVal">发送</text>
+</view>
+<view hidden="{{is_show_add}}" class="addBox">
+    <image bindtap="hide_addchat" style="width:750rpx;height:1206rpx" src="https://www.fawuding.cn/fwd/public/assets/newimg/addchat.png"></image>
+</view>
